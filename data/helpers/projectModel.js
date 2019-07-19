@@ -1,5 +1,6 @@
 const db = require('../dbConfig.js');
-const mappers = require('./mappers');
+const mappers = require('./ToggleBoolean');
+
 
 module.exports = {
   get,
@@ -41,7 +42,18 @@ function insert(project) {
     .then(([id]) => this.get(id));
 }
 
+function update(id, changes) {
+  return db('projects')
+    .where('id', id)
+    .update(changes)
+    .then(count => (count > 0 ? this.get(id) : null));
+}
 
+function remove(id) {
+  return db('projects')
+    .where('id', id)
+    .del();
+}
 
 function getProjectActions(projectId) {
   return db('actions')
